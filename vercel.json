@@ -3,7 +3,6 @@
   "outputDirectory": "dist",
   "functions": {
     "api/index.ts": {
-      "runtime": "nodejs22.x",
       "includeFiles": "node_modules/better-sqlite3/build/Release/*.node"
     }
   },
