@@ -1,8 +1,12 @@
 import Database from 'better-sqlite3';
+import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
 
-const dbPath = path.join(process.cwd(), 'agrishield.db');
+const dbPath = process.env.VERCEL === '1'
+  ? path.join('/tmp', 'agrishield.db')
+  : path.join(process.cwd(), 'agrishield.db');
+fs.mkdirSync(path.dirname(dbPath), { recursive: true });
 export const db = new Database(dbPath);
 
 // Enable WAL mode for high concurrency

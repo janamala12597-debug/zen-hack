@@ -11,7 +11,7 @@ import { auditRouter } from './server/routes/audit.js';
 import { adminRouter } from './server/routes/admin.js';
 import { systemRouter } from './server/routes/system.js';
 
-async function startServer() {
+export async function createApp() {
   // 1. Initialize SQLite Database
   initDatabase();
 
@@ -49,12 +49,16 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[AgriShield Server] running on http://0.0.0.0:${PORT}`);
-  });
+  return app;
 }
 
-startServer().catch((err) => {
-  console.error('[AgriShield Server] Startup Error:', err);
-  process.exit(1);
-});
+if (process.env.VERCEL !== '1') {
+  createApp().then((app) => {
+    app.listen(3000, '0.0.0.0', () => {
+      console.log('[AgriShield Server] running on http://0.0.0.0:3000');
+    });
+  }).catch((err) => {
+    console.error('[AgriShield Server] Startup Error:', err);
+    process.exit(1);
+  });
+}
