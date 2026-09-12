@@ -1,0 +1,6 @@
+{
+  "name": "AgriShield - Offline-First Parametric Micro-Insurance",
+  "description": "Offline-first parametric crop micro-insurance system with 3-source weather oracle median verification, explainable policy engine, and seamless offline-to-online claim synchronization.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
