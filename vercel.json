@@ -3,7 +3,9 @@
   "outputDirectory": "dist",
   "functions": {
     "api/index.ts": {
-      "includeFiles": "node_modules/better-sqlite3/build/Release/*.node"
+      "includeFiles": [
+        "node_modules/better-sqlite3/build/Release/better_sqlite3.node"
+      ]
     }
   },
   "rewrites": [
