@@ -1,16 +1,34 @@
-import Database from 'better-sqlite3';
-import fs from 'fs';
-import path from 'path';
+import alasql from 'alasql';
 import bcrypt from 'bcryptjs';
 
-const dbPath = process.env.VERCEL === '1' ? ':memory:' : path.join(process.cwd(), 'agrishield.db');
-if (dbPath !== ':memory:') {
-  fs.mkdirSync(path.dirname(dbPath), { recursive: true });
-}
-export const db = new Database(dbPath);
+const memoryDatabase = new alasql.Database();
 
-// Enable WAL mode for high concurrency
-db.pragma('journal_mode = WAL');
+function compatibleSql(sql: string) {
+  return sql.replace(/\bas\s+count\b/gi, 'as [count]');
+}
+
+export const db = {
+  exec(sql: string) {
+    return memoryDatabase.exec(compatibleSql(sql));
+  },
+  pragma(_value: string) {
+    return undefined;
+  },
+  prepare(sql: string) {
+    return {
+      get(...params: unknown[]) {
+        const rows = memoryDatabase.exec(compatibleSql(sql), params) as any[];
+        return rows[0];
+      },
+      all(...params: unknown[]) {
+        return memoryDatabase.exec(compatibleSql(sql), params) as any[];
+      },
+      run(...params: unknown[]) {
+        return memoryDatabase.exec(compatibleSql(sql), params);
+      },
+    };
+  },
+};
 
 export function initDatabase() {
   // Users table (Farmers & Admin)
