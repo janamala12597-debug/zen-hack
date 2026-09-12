@@ -43,6 +43,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           const cached = getCachedUserProfile();
           if (cached) {
             setUser(cached);
+          } else if (!token) {
+            // Open the seeded demo dashboard without requiring a login step.
+            const demo = await api.login('9876543210', 'farmer123');
+            setUser(demo.user);
+            setToken(demo.token);
+            if (demo.user.preferred_language) {
+              setLanguage(demo.user.preferred_language);
+            }
           }
         }
       } catch (err) {
