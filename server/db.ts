@@ -3,10 +3,10 @@ import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
 
-const dbPath = process.env.VERCEL === '1'
-  ? path.join('/tmp', 'agrishield.db')
-  : path.join(process.cwd(), 'agrishield.db');
-fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+const dbPath = process.env.VERCEL === '1' ? ':memory:' : path.join(process.cwd(), 'agrishield.db');
+if (dbPath !== ':memory:') {
+  fs.mkdirSync(path.dirname(dbPath), { recursive: true });
+}
 export const db = new Database(dbPath);
 
 // Enable WAL mode for high concurrency
